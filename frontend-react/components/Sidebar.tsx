@@ -130,30 +130,76 @@ const ChatNavItem: React.FC<{
   session: ChatSession;
   active: boolean;
   onClick: () => void;
-}> = ({ session, active, onClick }) => (
-  <button
-    onClick={onClick}
-    className={`w-full group flex items-center justify-between gap-2 rounded-lg px-3 py-2.5 transition-all mb-1 ${
-      active ? "bg-surface-active" : "hover:bg-[#283539]"
-    }`}
-  >
-    <div className="flex items-center gap-3 min-w-0">
-      <span
-        className={`material-symbols-outlined text-[20px] ${
-          active ? "text-white" : "text-slate-400 group-hover:text-white"
-        }`}
-      >
-        {active ? "chat_bubble" : "chat_bubble_outline"}
-      </span>
-      <p
-        className={`truncate text-sm font-medium ${
-          active ? "text-white" : "text-slate-300 group-hover:text-white"
-        }`}
-      >
-        {session.title}
-      </p>
-    </div>
-  </button>
-);
+}> = ({ session, active, onClick }) => {
+  const formatDate = (date: Date) => {
+    const now = new Date();
+    const diff = now.getTime() - date.getTime();
+    const oneDay = 24 * 60 * 60 * 1000;
+
+    // 今天：显示时间
+    if (diff < oneDay) {
+      return date.toLocaleTimeString("zh-CN", {
+        hour: "2-digit",
+        minute: "2-digit",
+      });
+    }
+    // 昨天
+    if (diff < oneDay * 2) {
+      return (
+        "昨天 " +
+        date.toLocaleTimeString("zh-CN", {
+          hour: "2-digit",
+          minute: "2-digit",
+        })
+      );
+    }
+    // 更早：显示日期
+    return date.toLocaleDateString("zh-CN", {
+      month: "2-digit",
+      day: "2-digit",
+    });
+  };
+
+  return (
+    <button
+      onClick={onClick}
+      className={`w-full group flex items-start justify-between gap-2 rounded-lg px-3 py-2.5 transition-all mb-1 ${
+        active ? "bg-surface-active" : "hover:bg-[#283539]"
+      }`}
+    >
+      <div className="flex items-start gap-3 min-w-0 flex-1">
+        <span
+          className={`material-symbols-outlined text-[20px] mt-0.5 ${
+            active ? "text-white" : "text-slate-400 group-hover:text-white"
+          }`}
+        >
+          {active ? "chat_bubble" : "chat_bubble_outline"}
+        </span>
+        <div className="flex flex-col items-start min-w-0 flex-1">
+          <p
+            className={`truncate text-sm font-medium w-full text-left ${
+              active ? "text-white" : "text-slate-300 group-hover:text-white"
+            }`}
+          >
+            {session.title}
+          </p>
+          <div className="flex items-center gap-2 mt-1">
+            <span className="text-xs text-slate-500">
+              {formatDate(session.lastUpdated)}
+            </span>
+            {session.knowledgeBase && (
+              <>
+                <span className="text-slate-600">•</span>
+                <span className="text-xs text-slate-500 truncate max-w-[100px]">
+                  {session.knowledgeBase}
+                </span>
+              </>
+            )}
+          </div>
+        </div>
+      </div>
+    </button>
+  );
+};
 
 export default Sidebar;

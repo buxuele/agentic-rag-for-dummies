@@ -1,8 +1,9 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { Role, Message, ChatSession } from "./types";
+import { Role, Message, ChatSession, KnowledgeBase } from "./types";
 import Sidebar from "./components/Sidebar";
 import ChatWindow from "./components/ChatWindow";
 import UploadModal from "./components/UploadModal";
+import KnowledgeBaseModal from "./components/KnowledgeBaseModal";
 
 const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
 
@@ -12,6 +13,26 @@ const App: React.FC = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [documents, setDocuments] = useState<string[]>([]);
   const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
+  const [isKBModalOpen, setIsKBModalOpen] = useState(false);
+  const [knowledgeBases, setKnowledgeBases] = useState<KnowledgeBase[]>([
+    {
+      id: "default",
+      name: "默认知识库",
+      description: "包含所有已上传的文档",
+      isDefault: true,
+    },
+    {
+      id: "javascript",
+      name: "JavaScript 教程",
+      description: "JavaScript 相关文档",
+    },
+    { id: "blockchain", name: "区块链入门", description: "区块链基础知识" },
+    {
+      id: "microservices",
+      name: "微服务架构",
+      description: "微服务设计与部署",
+    },
+  ]);
 
   // Initialize with saved data or create new chat
   useEffect(() => {
@@ -28,7 +49,8 @@ const App: React.FC = () => {
       setSessions(parsed);
       if (parsed.length > 0) setActiveSessionId(parsed[0].id);
     } else {
-      createNewChat();
+      // 首次使用，打开知识库选择弹窗
+      setIsKBModalOpen(true);
     }
 
     // Load documents from backend
@@ -52,17 +74,34 @@ const App: React.FC = () => {
     }
   };
 
-  const createNewChat = useCallback(() => {
-    const newId = Date.now().toString();
-    const newSession: ChatSession = {
-      id: newId,
-      title: "新对话",
-      messages: [],
-      lastUpdated: new Date(),
-    };
-    setSessions((prev) => [newSession, ...prev]);
-    setActiveSessionId(newId);
-  }, []);
+  const createNewChat = useCallback(
+    (knowledgeBase?: string) => {
+      const newId = Date.now().toString();
+      const kb =
+        knowledgeBase ||
+        knowledgeBases.find((k) => k.isDefault)?.name ||
+        "默认知识库";
+      const newSession: ChatSession = {
+        id: newId,
+        title: "新对话",
+        messages: [],
+        lastUpdated: new Date(),
+        knowledgeBase: kb,
+      };
+      setSessions((prev) => [newSession, ...prev]);
+      setActiveSessionId(newId);
+    },
+    [knowledgeBases]
+  );
+
+  const handleNewChatClick = () => {
+    setIsKBModalOpen(true);
+  };
+
+  const handleKBSelect = (kbId: string) => {
+    const kb = knowledgeBases.find((k) => k.id === kbId);
+    createNewChat(kb?.name);
+  };
 
   const addMessageToActiveSession = useCallback(
     async (role: Role, content: string) => {
@@ -163,7 +202,7 @@ const App: React.FC = () => {
         sessions={sessions}
         activeId={activeSessionId}
         onSelect={setActiveSessionId}
-        onNewChat={createNewChat}
+        onNewChat={handleNewChatClick}
         isOpen={isSidebarOpen}
         onToggle={() => setIsSidebarOpen(!isSidebarOpen)}
       />
@@ -177,6 +216,12 @@ const App: React.FC = () => {
         onClose={() => setIsUploadModalOpen(false)}
         onUpload={uploadDocuments}
         documents={documents}
+      />
+      <KnowledgeBaseModal
+        isOpen={isKBModalOpen}
+        onClose={() => setIsKBModalOpen(false)}
+        onSelect={handleKBSelect}
+        knowledgeBases={knowledgeBases}
       />
     </div>
   );

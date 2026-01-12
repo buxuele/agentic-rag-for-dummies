@@ -5,7 +5,7 @@ echo ========================================
 echo.
 
 echo Starting Backend (FastAPI)...
-start "Backend" cmd /k "python start_backend.py"
+start "Backend" cmd /k ".venv\Scripts\activate && python run_backend.py"
 
 timeout /t 3 /nobreak >nul
 

@@ -43,22 +43,19 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
           <h2 className="text-lg font-bold text-white">智能 RAG 助手</h2>
         </div>
         <div className="flex items-center gap-3">
-          <button 
+          <button
             onClick={onOpenUpload}
             className="flex items-center gap-2 px-4 py-2 bg-primary/10 hover:bg-primary/20 border border-primary/30 text-primary rounded-lg transition-all"
             title="文档管理"
           >
-            <span className="material-symbols-outlined text-[20px]">folder_open</span>
+            <span className="material-symbols-outlined text-[20px]">
+              folder_open
+            </span>
             <span className="text-sm font-medium">文档管理</span>
           </button>
           <button
             className="text-slate-400 hover:text-white transition-colors p-2 hover:bg-[#283539] rounded-lg"
             title="分享"
-          >
-            <span className="material-symbols-outlined">ios_share</span>
-          </button>
-        </div>
-      </header>
           >
             <span className="material-symbols-outlined">ios_share</span>
           </button>

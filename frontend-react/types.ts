@@ -1,7 +1,6 @@
-
 export enum Role {
-  USER = 'user',
-  MODEL = 'model'
+  USER = "user",
+  MODEL = "model",
 }
 
 export interface Message {
@@ -16,4 +15,12 @@ export interface ChatSession {
   title: string;
   messages: Message[];
   lastUpdated: Date;
+  knowledgeBase?: string; // 知识库名称
+}
+
+export interface KnowledgeBase {
+  id: string;
+  name: string;
+  description?: string;
+  isDefault?: boolean;
 }

@@ -5,8 +5,8 @@ import uvicorn
 import sys
 from pathlib import Path
 
-# Add project to path
-sys.path.insert(0, str(Path(__file__).parent / "project"))
+# Add backend-python to path
+sys.path.insert(0, str(Path(__file__).parent / "backend-python"))
 
 if __name__ == "__main__":
     print("🚀 Starting Agentic RAG Backend...")

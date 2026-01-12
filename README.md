@@ -5,14 +5,22 @@
 ## 快速开始
 
 ```bash
-# Windows
 run_all.bat
-
-# Linux/Mac
-./start_all.sh
 ```
 
 访问: http://localhost:5173
+
+## 项目结构
+
+```
+rag_apps/
+├── backend-python/      # 后端代码和数据
+├── frontend-react/      # React 前端
+├── run_backend.py       # 后端启动脚本
+└── run_all.bat          # 一键启动
+```
+
+详见: [PROJECT_STRUCTURE.md](PROJECT_STRUCTURE.md)
 
 ## 安装
 
@@ -53,6 +61,7 @@ npm install
 
 ## 文档
 
+- [项目结构](PROJECT_STRUCTURE.md)
 - [快速开始](QUICKSTART.md)
 - [问题修复](FIX_RAG_ISSUES.md)
 
