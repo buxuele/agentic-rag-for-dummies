@@ -1,0 +1,7 @@
+{
+  "name": "Gemini AI Chat Interface",
+  "description": "A high-fidelity AI chat interface inspired by GPT-4 UI, featuring real-time messaging, sidebar history, and Gemini 3 integration.",
+  "requestFramePermissions": [
+    "microphone"
+  ]
+}

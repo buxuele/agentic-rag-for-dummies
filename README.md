@@ -10,11 +10,11 @@
 
 <p align="center">
   <a href="#overview">Overview</a> •
+  <a href="#quick-start-fastapi--react">Quick Start</a> •
   <a href="#how-it-works">How It Works</a> •
   <a href="#llm-provider-configuration">LLM Providers</a> •
   <a href="#implementation">Implementation</a> •
-  <a href="#installation--usage">Installation & Usage</a> •
-  <a href="#troubleshooting">Troubleshooting</a>
+  <a href="#installation--usage">Installation & Usage</a>
 </p>
 
 <p align="center">
@@ -31,6 +31,53 @@
 <p align="center">
   <strong>If you like this project, a star ⭐️ would mean a lot :)</strong>
 </p>
+
+---
+
+## 🚀 Quick Start: FastAPI + React
+
+**New!** Modern web interface with FastAPI backend and React frontend.
+
+### One-Command Start (Windows)
+
+```bash
+start_all.bat
+```
+
+### One-Command Start (Linux/Mac)
+
+```bash
+chmod +x start_all.sh && ./start_all.sh
+```
+
+### Manual Start
+
+```bash
+# Terminal 1 - Backend
+python start_backend.py
+
+# Terminal 2 - Frontend
+cd frontend-react
+npm install
+npm run dev
+```
+
+**Access:**
+
+- 🌐 Frontend: http://localhost:5173
+- 🔧 API Docs: http://localhost:8000/docs
+
+**Features:**
+
+- 💬 Modern chat interface
+- 📄 Drag-and-drop document upload
+- 📚 Knowledge base management
+- 🎨 Dark theme UI
+- 💾 Session persistence
+
+📖 See [QUICKSTART.md](QUICKSTART.md) for detailed instructions.
+
+---
 
 ## Overview
 
@@ -55,6 +102,7 @@ Step-by-step tutorial perfect for understanding core concepts. Start here if you
 Modular architecture where each component can be independently swapped. Use this approach if you want to build real applications or customize the system to your needs.
 
 **Examples of what you can customize:**
+
 - **LLM Provider**: Switch from Ollama to Claude, OpenAI, or Gemini (one line change)
 - **Agent Workflow**: Add/remove nodes in the graph and customize system prompts for specific domains (legal, medical, etc.)
 - **PDF Conversion**: Replace PyMuPDF with Docling, PaddleOCR, or other tools
@@ -73,6 +121,7 @@ This approach combines the **precision of small chunks** with the **contextual r
 Most RAG tutorials show basic concepts but lack production readiness. This repository bridges that gap by providing **both learning materials and deployable code**:
 
 ❌ **Typical RAG repos:**
+
 - Simple pipelines that trade off precision vs context
 - No conversation memory
 - Static, non-adaptive retrieval
@@ -81,6 +130,7 @@ Most RAG tutorials show basic concepts but lack production readiness. This repos
 - Single-threaded query processing
 
 ✅ **This repo:**
+
 - **Two learning paths**: Interactive notebook AND modular project
 - **Hierarchical indexing** for precision + context
 - **Conversation memory** for natural dialogue
@@ -88,7 +138,7 @@ Most RAG tutorials show basic concepts but lack production readiness. This repos
 - **Multi-Agent Map-Reduce** for parallel processing of complex queries
 - **Modular architecture** - swap any component
 - **Provider-agnostic** - use any LLM (Ollama, OpenAI, Gemini, Claude)
-- **UI interface** - end-to-end Gradio app with document management
+- **Modern UI** - React + FastAPI with document management
 
 ---
 
@@ -106,6 +156,7 @@ This approach combines the **precision of small chunks** for search with the **c
 ---
 
 ### Query Processing: Four-Stage Intelligent Workflow
+
 ```
 User Query → Conversation Analysis → Query Clarification →
 Agent Reasoning → Search Child Chunks → Evaluate Relevance →
@@ -113,12 +164,14 @@ Agent Reasoning → Search Child Chunks → Evaluate Relevance →
 ```
 
 #### Stage 1: Conversation Understanding
+
 - Analyzes recent conversation history to extract context
 - Maintains conversational continuity across multiple questions
 
 #### Stage 2: Query Clarification
 
 The system intelligently processes the user's query:
+
 1. **Resolves references** - Converts "How do I update it?" → "How do I update SQL?"
 2. **Splits complex questions** - Breaks multi-part questions into focused sub-queries
 3. **Detects unclear queries** - Identifies nonsense, insults, or vague questions
@@ -139,7 +192,7 @@ When the query analysis stage identifies multiple distinct questions (either exp
 
 All agent responses are then aggregated into a unified answer.
 
-**Example:** *"What is JavaScript? What is Python?"* → 2 parallel agents execute simultaneously
+**Example:** _"What is JavaScript? What is Python?"_ → 2 parallel agents execute simultaneously
 
 **Single question workflow:**
 For simple queries, a single agent executes the retrieval workflow without parallelization.
@@ -200,9 +253,11 @@ llm = ChatGoogleGenerativeAI(model="gemini-2.0-flash-exp", temperature=0)
 <summary>Click to expand</summary>
 
 **OpenAI:**
+
 ```bash
 pip install -qU langchain-openai
 ```
+
 ```python
 from langchain_openai import ChatOpenAI
 import os
@@ -212,9 +267,11 @@ llm = ChatOpenAI(model="gpt-4o-mini", temperature=0)
 ```
 
 **Anthropic Claude:**
+
 ```bash
 pip install -qU langchain-anthropic
 ```
+
 ```python
 from langchain_anthropic import ChatAnthropic
 import os
@@ -545,7 +602,7 @@ def search_child_chunks(query: str, limit: int) -> str:
 @tool
 def retrieve_parent_chunks(parent_id: str) -> str:
     """Retrieve full parent chunks by their IDs.
-    
+
     Args:
         parent_id: Parent chunk ID to retrieve
     """
@@ -586,7 +643,7 @@ Include:
 - Any unresolved questions if applicable
 - Sources file name (e.g., file1.pdf) or documents referenced
 
-Exclude: 
+Exclude:
 -Greetings, misunderstandings, off-topic content.
 
 Output:
@@ -637,7 +694,7 @@ def get_rag_agent_prompt() -> str:
 
 Your task is to act as a researcher: search documents first, analyze the data, and then provide a comprehensive answer using ONLY the retrieved information.
 
-Rules:    
+Rules:
 1. You are NOT allowed to answer immediately.
 2. Before producing ANY final answer, you MUST perform a document search and observe retrieved content.
 3. If you have not searched, the answer is invalid.
@@ -699,7 +756,7 @@ class State(MessagesState):
     """State for main agent graph"""
     questionIsClear: bool = False
     conversation_summary: str = ""
-    originalQuery: str = "" 
+    originalQuery: str = ""
     rewrittenQuestions: List[str] = []
     agent_answers: Annotated[List[dict], accumulate_or_reset] = []
 
@@ -744,7 +801,7 @@ def analyze_chat_and_summarize(state: State):
 
     if not relevant_msgs:
         return {"conversation_summary": ""}
-    
+
     conversation = "Conversation history:\n"
     for msg in relevant_msgs[-6:]:
         role = "User" if isinstance(msg, HumanMessage) else "Assistant"
@@ -802,12 +859,12 @@ def route_after_rewrite(state: State) -> Literal["human_input", "process_questio
 
 def agent_node(state: AgentState):
     """Main agent node that processes queries using tools"""
-    sys_msg = SystemMessage(content=get_rag_agent_prompt())    
+    sys_msg = SystemMessage(content=get_rag_agent_prompt())
     if not state.get("messages"):
         human_msg = HumanMessage(content=state["question"])
         response = llm_with_tools.invoke([sys_msg] + [human_msg])
         return {"messages": [human_msg, response]}
-    
+
     return {"messages": [llm_with_tools.invoke([sys_msg] + state["messages"])]}
 
 def extract_final_answer(state: AgentState):
@@ -845,11 +902,12 @@ def aggregate_responses(state: State):
 
     user_message = HumanMessage(content=f"""Original user question: {state["originalQuery"]}\nRetrieved answers:{formatted_answers}""")
     synthesis_response = llm.invoke([SystemMessage(content=get_aggregation_prompt())] + [user_message])
-    
+
     return {"messages": [AIMessage(content=synthesis_response.content)]}
 ```
 
 **Why this architecture?**
+
 - **Summarization** maintains conversational context without overwhelming the LLM
 - **Query rewriting** ensures search queries are precise and unambiguous, using context intelligently
 - **Human-in-the-loop** catches unclear queries before wasting retrieval resources
@@ -878,10 +936,10 @@ agent_builder.add_node("agent", agent_node)
 agent_builder.add_node("tools", ToolNode([search_child_chunks, retrieve_parent_chunks]))
 agent_builder.add_node("extract_answer", extract_final_answer)
 
-agent_builder.add_edge(START, "agent")    
+agent_builder.add_edge(START, "agent")
 agent_builder.add_conditional_edges("agent", tools_condition, {"tools": "tools", END: "extract_answer"})
-agent_builder.add_edge("tools", "agent")    
-agent_builder.add_edge("extract_answer", END)    
+agent_builder.add_edge("tools", "agent")
+agent_builder.add_edge("extract_answer", END)
 agent_subgraph = agent_builder.compile()
 
 # Build main graph (orchestrates workflow)
@@ -912,12 +970,14 @@ agent_graph = graph_builder.compile(
 **Graph architecture explained:**
 
 **Agent Subgraph** (processes individual questions):
+
 - START → `agent` (invoke LLM with tools)
 - `agent` → `tools` (if tool calls needed) OR `extract_answer` (if done)
 - `tools` → `agent` (return tool results)
 - `extract_answer` → END (clean final answer)
 
 **Main Graph** (orchestrates complete workflow):
+
 1. START → `summarize` (extract conversation context from history)
 2. `summarize` → `analyze_rewrite` (rewrite query with context, check clarity)
 3. `analyze_rewrite` → `human_input` (if unclear) OR spawn parallel `process_question` agents (if clear)
@@ -926,6 +986,7 @@ agent_graph = graph_builder.compile(
 6. `aggregate` → END (return final synthesized answer)
 
 **Key features:**
+
 - **Parallel execution**: Multiple agent subgraphs run simultaneously using LangGraph's `Send` API
 - **Human-in-the-loop**: Graph pauses at `human_input` node when queries are unclear
 - **Conversation memory**: `InMemorySaver` checkpointer maintains state across interactions
@@ -937,7 +998,6 @@ The architecture flow diagram can be viewed [here](./assets/agentic_rag_workflow
 ### Step 10: Create Chat Interface
 
 Build a Gradio interface with conversation persistence and human-in-the-loop support. For a complete end-to-end pipeline Gradio interface, including document ingestion, please refer to the project folder
-
 
 ```python
 import gradio as gr
@@ -955,7 +1015,7 @@ def clear_session():
 
 def chat_with_agent(message, history):
     current_state = agent_graph.get_state(config)
-    
+
     if current_state.next:
         # Resume interrupted conversation
         agent_graph.update_state(config,{"messages": [HumanMessage(content=message.strip())]})
@@ -963,7 +1023,7 @@ def chat_with_agent(message, history):
     else:
         # Start new query
         result = agent_graph.invoke({"messages": [HumanMessage(content=message.strip())]},config)
-    
+
     return result['messages'][-1].content
 
 # Initialize thread configuration
@@ -990,6 +1050,7 @@ demo.launch(theme=gr.themes.Citrus())
 The app (`project/` folder) is organized in modular components that can be easily customized:
 
 ### 📂 Project Structure
+
 ```
 project/
 ├── app.py                    # Main Gradio application entry point
@@ -997,9 +1058,9 @@ project/
 ├── util.py                   # PDF to markdown conversion
 ├── document_chunker.py       # Chunking strategy
 ├── core/                     # Core RAG components orchestration
-│   ├── chat_interface.py     
-│   ├── document_manager.py   
-│   └── rag_system.py         
+│   ├── chat_interface.py
+│   ├── document_manager.py
+│   └── rag_system.py
 ├── db/                       # Storage management
 │   ├── parent_store_manager.py  # Parent chunks storage (JSON)
 │   └── vector_db_manager.py     # Qdrant vector database setup
@@ -1018,17 +1079,20 @@ project/
 ### 🔧 Customization Points
 
 #### **Configuration (`config.py`)**
+
 - **LLM Provider & Model**: Switch between Ollama, Claude, OpenAI, or Gemini
 - **Embedding Model**: Configure embedding model for vector representations
 - **Chunk Sizes**: Adjust child and parent chunk dimensions for optimal retrieval
 
 #### **RAG Agent (`rag_agent/`)**
+
 - **Workflow Customization**: Add or remove nodes and edges to modify the agent flow
 - **System Prompts**: Tailor prompts in `prompts.py` for domain-specific applications
 - **Retrieval Tools**: Extend or modify tools in `tools.py` to enhance retrieval capabilities
 - **Graph Logic**: Customize conditional routing in `edges.py` and node processing in `nodes.py`
 
 #### **Document Processing**
+
 - **Markdown Conversion** (`util.py`): Replace PDF conversion tools with alternatives (e.g., Docling, PaddleOCR). More details [here](pdf_to_md.ipynb)
 - **Chunking Strategy** (`document_chunker.py`): Implement custom chunking algorithms (e.g., semantic or hybrid approaches)
 
@@ -1036,13 +1100,14 @@ This modular design ensures flexibility for experimenting with different RAG tec
 
 ## Installation & Usage
 
-Sample pdf files can be found here: [javascript](https://www.tutorialspoint.com/javascript/javascript_tutorial.pdf), [blockchain](https://blockchain-observatory.ec.europa.eu/document/download/1063effa-59cc-4df4-aeee-d2cf94f69178_en?filename=Blockchain_For_Beginners_A_EUBOF_Guide.pdf), [microservices](https://cdn.studio.f5.com/files/k6fem79d/production/5e4126e1cefa813ab67f9c0b6d73984c27ab1502.pdf), [fortinet](https://www.commoncriteriaportal.org/files/epfiles/Fortinet%20FortiGate_EAL4_ST_V1.5.pdf(320893)_TMP.pdf)  
+Sample pdf files can be found here: [javascript](https://www.tutorialspoint.com/javascript/javascript_tutorial.pdf), [blockchain](https://blockchain-observatory.ec.europa.eu/document/download/1063effa-59cc-4df4-aeee-d2cf94f69178_en?filename=Blockchain_For_Beginners_A_EUBOF_Guide.pdf), [microservices](https://cdn.studio.f5.com/files/k6fem79d/production/5e4126e1cefa813ab67f9c0b6d73984c27ab1502.pdf), [fortinet](<https://www.commoncriteriaportal.org/files/epfiles/Fortinet%20FortiGate_EAL4_ST_V1.5.pdf(320893)_TMP.pdf>)
 
 ### Option 1: Quickstart Notebook (Recommended for Testing)
 
 The easiest way to get started:
 
 **Running in Google Colab:**
+
 1. Click the **Open in Colab** badge at the top of this README
 2. Create a `docs/` folder in the file browser
 3. Upload your pdf files to the `docs/` folder
@@ -1050,6 +1115,7 @@ The easiest way to get started:
 5. The chat interface will appear at the end
 
 **Running Locally (Jupyter/VSCode):**
+
 1. Install dependencies first `pip install -r requirements.txt`
 2. Open the notebook in your preferred environment
 3. Add your pdf files to the `docs/` folder
@@ -1090,7 +1156,7 @@ Open the local URL (e.g., `http://127.0.0.1:7860`) to start chatting.
 
 ---
 
-### Option 3: Docker Deployment 
+### Option 3: Docker Deployment
 
 > ⚠️ **System Requirements**: Docker deployment requires **at least 8GB of RAM** allocated to Docker. The Ollama model (`qwen3:4b-instruct-2507-q4_K_M`) needs approximately 3.3GB of memory to run.
 
@@ -1143,12 +1209,14 @@ docker rm -f rag-assistant
 #### 3. Access the Application
 
 Once the container is running and you see:
+
 ```
 🚀 Launching RAG Assistant...
 * Running on local URL:  http://0.0.0.0:7860
 ```
 
 Open your browser and navigate to:
+
 ```
 http://localhost:7860
 ```
@@ -1156,6 +1224,7 @@ http://localhost:7860
 ### Example Conversations
 
 **With Conversation Memory:**
+
 ```
 User: "How do I install SQL?"
 Agent: [Provides installation steps from documentation]
@@ -1165,6 +1234,7 @@ Agent: [Understands "it" = SQL, provides update instructions]
 ```
 
 **With Query Clarification:**
+
 ```
 User: "Tell me about that thing"
 Agent: "I need more information. What specific topic are you asking about?"
@@ -1177,14 +1247,15 @@ Agent: [Retrieves and answers with specific information]
 
 ## Troubleshooting
 
-| Area | Common Problems | Suggested Solutions |
-|------|----------------|------------------|
-| **Model Selection** | - Responses ignore instructions<br>- Tools (retrieval/search) used incorrectly<br>- Poor context understanding<br>- Hallucinations or incomplete aggregation | - Use more capable LLMs<br>- Prefer models 7B+ for better reasoning<br>- Consider cloud-based models if local models are limited |
-| **System Prompt Behavior** | - Model answers without retrieving documents<br>- Query rewriting loses context<br>- Aggregation introduces hallucinations | - Make retrieval explicit in system prompts<br>- Keep query rewriting close to user intent<br>- Enforce strict aggregation rules |
-| **Retrieval Configuration** | - Relevant documents not retrieved<br>- Too much irrelevant information | - Increase retrieved chunks (`k`) or lower similarity thresholds to improve recall<br>- Reduce `k` or increase thresholds to improve precision |
-| **Chunk Size / Document Splitting** | - Answers lack context or feel fragmented<br>- Retrieval is slow or embedding costs are high | - Increase chunk & parent sizes for more context<br>- Decrease chunk sizes to improve speed and reduce costs |
-| **Temperature & Consistency** | - Responses inconsistent or overly creative<br>- Responses too rigid or repetitive | - Set temperature to `0` for factual, consistent output<br>- Slightly increase temperature for summarization or analysis tasks |
-| **Embedding Model Quality** | - Poor semantic search<br>- Weak performance on domain-specific or multilingual docs | - Use higher-quality or domain-specific embeddings<br>- Re-index all documents after changing embeddings |
+| Area                                | Common Problems                                                                                                                                              | Suggested Solutions                                                                                                                            |
+| ----------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Model Selection**                 | - Responses ignore instructions<br>- Tools (retrieval/search) used incorrectly<br>- Poor context understanding<br>- Hallucinations or incomplete aggregation | - Use more capable LLMs<br>- Prefer models 7B+ for better reasoning<br>- Consider cloud-based models if local models are limited               |
+| **System Prompt Behavior**          | - Model answers without retrieving documents<br>- Query rewriting loses context<br>- Aggregation introduces hallucinations                                   | - Make retrieval explicit in system prompts<br>- Keep query rewriting close to user intent<br>- Enforce strict aggregation rules               |
+| **Retrieval Configuration**         | - Relevant documents not retrieved<br>- Too much irrelevant information                                                                                      | - Increase retrieved chunks (`k`) or lower similarity thresholds to improve recall<br>- Reduce `k` or increase thresholds to improve precision |
+| **Chunk Size / Document Splitting** | - Answers lack context or feel fragmented<br>- Retrieval is slow or embedding costs are high                                                                 | - Increase chunk & parent sizes for more context<br>- Decrease chunk sizes to improve speed and reduce costs                                   |
+| **Temperature & Consistency**       | - Responses inconsistent or overly creative<br>- Responses too rigid or repetitive                                                                           | - Set temperature to `0` for factual, consistent output<br>- Slightly increase temperature for summarization or analysis tasks                 |
+| **Embedding Model Quality**         | - Poor semantic search<br>- Weak performance on domain-specific or multilingual docs                                                                         | - Use higher-quality or domain-specific embeddings<br>- Re-index all documents after changing embeddings                                       |
+
 ---
 
 ## License
